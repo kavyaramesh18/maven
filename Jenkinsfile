@@ -20,14 +20,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('Kavyashree TR') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=my-java-project -Dsonar.login=$SONARQUBE_TOKEN'
+                    bat """mvn sonar:sonar -Dsonar.projectKey=my-java-project -Dsonar.login=$SONARQUBE_TOKEN"""
                 }
             }
         }
