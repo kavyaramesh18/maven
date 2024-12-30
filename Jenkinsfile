@@ -2,19 +2,19 @@ pipeline {
     agent any
 
     tools {
-        jdk 'jdk17'           // Replace with your JDK installation name in Jenkins
-        maven 'sonarmaven'    // Replace with your Maven installation name in Jenkins
+        jdk 'jdk17' // Replace with the actual JDK installation name in Jenkins
+        maven 'sonarmaven' // Replace with the actual Maven installation name in Jenkins
     }
 
     environment {
-        SONARQUBE_SERVER = 'SonarQubeServer'       // Replace with the SonarQube server name configured in Jenkins
-        SONARQUBE_TOKEN = credentials('newmaven')  // Replace 'newmaven' with the ID of your SonarQube token stored in Jenkins credentials
+        SONARQUBE_SERVER = 'Kavyashree TR' // Name of the SonarQube server configured in Jenkins
+        SONARQUBE_TOKEN = credentials('newmaven') // Replace 'secret' with the ID of your SonarQube token in Jenkins credentials
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout source code from SCM (Source Control Management)
+                // Checkout source code from SCM
                 checkout scm
             }
         }
@@ -22,31 +22,22 @@ pipeline {
         stage('Build') {
             steps {
                 // Run Maven clean and package
-                sh 'mvn clean package'  // Use `sh` for Linux/Mac or `bat` for Windows
+                bat 'mvn clean package'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 // Perform SonarQube analysis
-                withSonarQubeEnv(SONARQUBE_SERVER) {
-                    script {
-                        def scannerHome = tool 'SonarScanner' // Replace with the SonarScanner tool name configured in Jenkins
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=NewMaven \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.login=${SONARQUBE_TOKEN}
-                        """
-                    }
+                withSonarQubeEnv('Kavyashree TR') {
+                    bat """sonar-scanner.bat -D"sonar.projectKey=NewMaven" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_51f8f9f908fdf5f9e4cec9621f701421af71f6a2"""""
                 }
             }
         }
 
         stage('Quality Gate') {
             steps {
-                // Wait for SonarQube Quality Gate status
+                // Wait for SonarQube quality gate
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
@@ -62,9 +53,11 @@ pipeline {
             // Clean up the workspace
             cleanWs()
         }
+
         failure {
             echo 'Build failed!'
         }
+
         success {
             echo 'Build and SonarQube analysis successful!'
         }
