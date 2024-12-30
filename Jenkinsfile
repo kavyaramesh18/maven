@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'Kavyashree TR' // Name of the SonarQube server configured in Jenkins
-        SONARQUBE_TOKEN = credentials('secret') // Replace 'secret' with the ID of your SonarQube token in Jenkins credentials
+        SONARQUBE_TOKEN = credentials('newmaven') // Replace 'secret' with the ID of your SonarQube token in Jenkins credentials
     }
 
     stages {
@@ -30,9 +30,7 @@ pipeline {
             steps {
                 // Perform SonarQube analysis
                 withSonarQubeEnv('Kavyashree TR') {
-                    bat """mvn sonar:sonar \
-                        -Dsonar.projectKey=my-java-project \
-                        -Dsonar.login=$SONARQUBE_TOKEN"""
+                    bat """sonar-scanner.bat -D"sonar.projectKey=NewMaven" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_239bdf1e68af46dd88dfce2653520bb4223e7816""""
                 }
             }
         }
